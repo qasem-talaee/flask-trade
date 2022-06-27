@@ -4,6 +4,7 @@ from flask_socketio import SocketIO
 import hashlib
 import json
 import time
+import requests
 
 from lib import db
 from lib import api
@@ -172,6 +173,41 @@ def get_coin_price():
         out = Api.kline(market=market, limit=1, kline_type='1min')
         return out
     return ('', 200)
+
+def get_amount(cost, market, price_coin, leverage):
+    
+    def count_float(num):
+        count = num.split('.')
+        if len(count) == 1:
+            return 0
+        else:
+            return len(count[1])
+        
+    amount = (leverage * cost) / price_coin
+    
+    flag =  True
+    while flag:
+        try:
+            data = requests.get("https://api.coinex.com/perpetual/v1/market/list")
+            if data.status_code == requests.codes.ok:
+                if data.headers.get('content-type') == 'application/json':
+                    flag = False
+        except:
+            print('try agian in get_amount')
+
+    data = data.json()['data']
+    for i in range(len(data)):
+        if data[i]['name'] == market:
+            amount_min = data[i]['amount_min']
+            break
+    
+    count_float1 = count_float(amount_min)
+    if count_float1 == 0:
+        amount = round(amount, 0) - 1
+    else:
+        amount = round(amount, count_float1) - (10**(-count_float1+1))
+    #round_amount = round(amount, 4) - 0.0001
+    return amount
     
 @app.route('/open-pos', methods=['GET'])
 def open_pos():
@@ -192,6 +228,8 @@ def open_pos():
             pos = 1
         else:
             pos = 2
+        price = Api.kline(market=market, limit=1, kline_type='1min')['data'][0][2]
+        amount = get_amount(amount, market, price, leverage)
         Api.adjust_leverage(market, leverage_t, str(leverage))
         if type == 'limit':
             Api.put_limit_order(market, pos, str(amount), str(price))
