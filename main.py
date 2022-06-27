@@ -311,8 +311,8 @@ def getall_asset():
         result['asset_s'] = out
         return result
 
-@app.route('/trasfer', methods=['GET'])
-def trasfer():
+@app.route('/transfer', methods=['GET'])
+def transfer():
     if not session.get('email'):
         return redirect('/login')
     else:

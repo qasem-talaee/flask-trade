@@ -76,7 +76,7 @@
                 let market = document.getElementById("market_t").value;
                 if(document.getElementById("amount_t").value.length != 0){
                     let amount = document.getElementById("amount_t").value;
-                    xmlHttp.open("GET", "/trasnfer?market=" + market + "&status=" + status + "&amount=" + amount, true);
+                    xmlHttp.open("GET", "/transfer?market=" + market + "&status=" + status + "&amount=" + amount, true);
                     xmlHttp.onload = function (e) {
                     if (xmlHttp.readyState === 4) {
                         asset();
