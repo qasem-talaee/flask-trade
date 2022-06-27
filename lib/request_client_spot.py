@@ -38,9 +38,9 @@ class RequestClient(object):
             if response.json()['code'] == 0:
                 return response.json()
             else:
-                print('Try again')
+                return 'Try again'
         else:
-            print('Try again')
+            return 'Try again'
 
     def post(self, path, data=None):
         url = self.host + path
@@ -53,6 +53,6 @@ class RequestClient(object):
             if response.json()['code'] == 0:
                 return response.json()
             else:
-                print('Try again')
+                return 'Try again'
         else:
-            print('Try again')
+           return 'Try again'
