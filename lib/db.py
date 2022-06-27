@@ -54,9 +54,12 @@ class DB:
         
     def get_login(self, email, password):
         password = hashlib.sha256(password.encode()).hexdigest()
-        cursor = self.conn.execute("SELECT * FROM user WHERE email=%(email)s AND pass=%(password)s;", {'email': email, 'password': password})
+        sql = self.conn.execute("SELECT * FROM user WHERE email=? AND pass=?;")
+        curser = self.conn.cursor()
+        data = (email, password)
+        curser.execute(sql, data)
         i = 0
-        for _ in cursor:
+        for _ in curser:
             i += 1
         if i == 0:
             return False
