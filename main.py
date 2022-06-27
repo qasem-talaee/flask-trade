@@ -389,7 +389,7 @@ def setstpsl():
         sl = request.args.get("sl")
         sl_t = request.args.get("sl_t")
         out = Api.query_position_pending(market)['data']
-        if len(out != 0):
+        if len(out) != 0:
             id = out[0]['position_id']
             if sl != '':
                 if tp == '':
