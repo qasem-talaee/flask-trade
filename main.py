@@ -410,7 +410,7 @@ def closepos():
     if request.method == 'GET':
         market = request.args.get("market")
         out = Api.query_position_pending(market)['data']
-        if len(out != 0):
+        if len(out) != 0:
             id = out[0]['position_id']
             Api.close_pos(market, id)
     return ('', 200)
