@@ -231,6 +231,7 @@ def cancel_order():
         market = request.args.get("market")
         out = Api.cancel_order(market, id)
         return out
+    return 0
 
 @app.route('/update', methods=['GET'])
 def update():
@@ -279,6 +280,7 @@ def get_deposit():
         chain = request.args.get("chain")
         out = Api.get_deposite_address(market, chain)
         return out
+    return 0
     
 @app.route('/set-withdraw', methods=['GET'])
 def set_withdraw():
@@ -294,6 +296,7 @@ def set_withdraw():
         amount = request.args.get("amount")
         out = Api.submit_withdraw(market, chain, target, amount)
         return out
+    return 0
     
 @app.route('/getall_asset', methods=['GET'])
 def getall_asset():
@@ -310,6 +313,7 @@ def getall_asset():
         out = Api.asset_s()
         result['asset_s'] = out
         return result
+    return 0
 
 @app.route('/transfer', methods=['GET'])
 def transfer():
@@ -324,6 +328,7 @@ def transfer():
         amount = request.args.get("amount")
         out = Api.transfer(market, status, amount)
         return out
+    return 0
     
 @app.route('/settpsl', methods=['GET'])
 def settpsl():
@@ -348,7 +353,7 @@ def settpsl():
                     Api.setsl(market, id, sl_t, sl)
                     time.sleep(1)
                     Api.settp(market, id, tp_t, tp)
-        return 0
+    return 0
     
 @app.route('/closepos', methods=['GET'])
 def closepos():
@@ -363,7 +368,7 @@ def closepos():
         if len(out != 0):
             id = out[0]['position_id']
             Api.close_pos(market, id)
-        return 0
+    return 0
     
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
