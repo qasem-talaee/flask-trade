@@ -48,6 +48,7 @@ class RequestClient(object):
         data['tonce'] = int(time.time()*1000)
         self.get_auth(data)
         response = requests.post(url, headers=self.headers, params=data)
+        print(response.text)
         if response.status_code == requests.codes.ok:
             if response.json()['code'] == 0:
                 return response.json()
