@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, session, request
 from flask_session import Session
+from flask_socketio import SocketIO
 import hashlib
 import json
 import time
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+socketio = SocketIO(app)
 database = db.DB()
 global Api
 def get_secert():
@@ -18,6 +20,10 @@ def get_secert():
 
 def get_admin():
     return database.get_user_admin(session.get('email'))
+
+@socketio.on('disconnect')
+def disconnect_user():
+    session.pop('email', None)
 
 @app.route('/')
 def home():
@@ -54,6 +60,7 @@ def login():
 @app.route('/logout')
 def logout():
     session['email'] = None
+    session.pop('email', None)
     return redirect('/')
 
 @app.route('/ban')
