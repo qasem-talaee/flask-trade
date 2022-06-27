@@ -60,7 +60,7 @@ function open_pos_api(){
         pos = 'short'
     }
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", "/get-coin-price?type=" + order_type + "&market=" + market + "&leverage=" + leverage + "&amount=" + amount + "&price=" + price + "&pos=" + pos + "&leverage_t=" + leverage_t, false ); // false for synchronous request
+    xmlHttp.open( "GET", "/open_pos?type=" + order_type + "&market=" + market + "&leverage=" + leverage + "&amount=" + amount + "&price=" + price + "&pos=" + pos + "&leverage_t=" + leverage_t, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
     xmlHttp.send( null );
 }
