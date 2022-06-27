@@ -59,6 +59,7 @@ class RequestClient(object):
         headers = copy.copy(self.headers)
         self.set_authorization(data, headers)
         response = requests.post(url, data=data, headers=headers)
+        print(response.text)
         if response.status_code == requests.codes.ok:
             if response.json()['code'] == 0:
                 return response.json()
