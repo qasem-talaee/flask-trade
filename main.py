@@ -171,6 +171,7 @@ def get_coin_price():
         market = request.args.get("market")
         out = Api.kline(market=market, limit=1, kline_type='1min')
         return out
+    return ('', 200)
     
 @app.route('/open-pos', methods=['GET'])
 def open_pos():
@@ -196,6 +197,7 @@ def open_pos():
             Api.put_limit_order(market, pos, str(amount), str(price))
         if type == 'market':
             Api.put_market_order(market, pos, str(amount))
+    return ('', 200)
     
 @app.route('/get-asset', methods=['GET'])
 def get_asset():
@@ -207,6 +209,7 @@ def get_asset():
     if request.method == 'GET':
         out = Api.query_account()
         return out
+    return ('', 200)
     
 @app.route('/get-pending', methods=['GET'])
 def get_pending():
@@ -218,6 +221,7 @@ def get_pending():
     if request.method == 'GET':
         out = Api.query_order_pending('null', 0, 0)
         return out
+    return ('', 200)
     
 @app.route('/cancel-order', methods=['GET'])
 def cancel_order():
@@ -231,7 +235,7 @@ def cancel_order():
         market = request.args.get("market")
         out = Api.cancel_order(market, id)
         return out
-    return 0
+    return ('', 200)
 
 @app.route('/update', methods=['GET'])
 def update():
@@ -255,6 +259,7 @@ def update():
         out = Api.query_position_pending(market)
         result['pos'] = out
         return json.dumps(result)
+    return ('', 200)
 
 @app.route('/deposit', methods=['GET'])
 def deposit():
@@ -280,7 +285,7 @@ def get_deposit():
         chain = request.args.get("chain")
         out = Api.get_deposite_address(market, chain)
         return out
-    return 0
+    return ('', 200)
     
 @app.route('/set-withdraw', methods=['GET'])
 def set_withdraw():
@@ -296,7 +301,7 @@ def set_withdraw():
         amount = request.args.get("amount")
         out = Api.submit_withdraw(market, chain, target, amount)
         return out
-    return 0
+    return ('', 200)
     
 @app.route('/getall_asset', methods=['GET'])
 def getall_asset():
@@ -313,7 +318,7 @@ def getall_asset():
         out = Api.asset_s()
         result['asset_s'] = out
         return result
-    return 0
+    return ('', 200)
 
 @app.route('/transfer', methods=['GET'])
 def transfer():
@@ -328,7 +333,7 @@ def transfer():
         amount = request.args.get("amount")
         out = Api.transfer(market, status, amount)
         return out
-    return 0
+    return ('', 200)
     
 @app.route('/settpsl', methods=['GET'])
 def settpsl():
@@ -353,7 +358,7 @@ def settpsl():
                     Api.setsl(market, id, sl_t, sl)
                     time.sleep(1)
                     Api.settp(market, id, tp_t, tp)
-    return 0
+    return ('', 200)
     
 @app.route('/closepos', methods=['GET'])
 def closepos():
@@ -368,7 +373,7 @@ def closepos():
         if len(out != 0):
             id = out[0]['position_id']
             Api.close_pos(market, id)
-    return 0
+    return ('', 200)
     
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
