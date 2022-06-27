@@ -1189,9 +1189,9 @@ class CoinexPerpetualApi(object):
         path = "/contract/balance/transfer"
         data = {
             'access_id': self.access_id,
-            'coin_type': market,
             'transfer_side': status,
-            'amount': amount
+            'amount': amount,
+            'coin_type': market,
         }
         return self.request_client_spot.post(path, data)
     
