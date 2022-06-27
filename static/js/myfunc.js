@@ -138,7 +138,7 @@ setInterval(
                         let percent = (((price - pos['open_price']) / pos['open_price']) * 100 * pos['leverage']);
                         let vorod = amount_coin * pos['open_price'] / pos['leverage'];
                         let sodzarar = (percent / 100) * vorod;
-                        let mablaq_soz = (percent * vorod) + vorod;
+                        let mablaq_soz = ((percent / 100) * vorod) + vorod;
                         out = '<div class="row hove-status"> \
                                 <div class="col"> \
                                     <p>Side</p> \
