@@ -60,8 +60,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session['email'] = None
-    session.pop('email', None)
+    #session['email'] = None
+    #session.pop('email', None)
+    session.clear()
     return redirect('/')
 
 @app.route('/ban')

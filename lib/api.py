@@ -1,7 +1,4 @@
-from dataclasses import dataclass
-from importlib.resources import path
 from lib import reques_client, request_client_spot
-import time
 
 class CoinexPerpetualApi(object):
     ORDER_DIRECTION_SELL = 1
