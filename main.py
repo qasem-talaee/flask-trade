@@ -182,7 +182,9 @@ def get_amount(cost, market, price_coin, leverage):
             return 0
         else:
             return len(count[1])
-        
+    cost = float(cost)
+    price_coin = float(price_coin)
+    leverage = float(leverage)    
     amount = (leverage * cost) / price_coin
     
     flag =  True
@@ -201,7 +203,7 @@ def get_amount(cost, market, price_coin, leverage):
             amount_min = data[i]['amount_min']
             break
     
-    count_float1 = count_float(amount_min)
+    count_float1 = count_float(str(amount_min))
     if count_float1 == 0:
         amount = round(amount, 0) - 1
     else:
