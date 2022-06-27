@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Coinex API</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/static/css/mystyle.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/js/myfunc.js"></script>
+        <script src="/static/js/alert.js"></script>
+        <script>
+            function change(id, status) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Change it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var request = new XMLHttpRequest();
+                        request.open("GET", "/change-status?id=" + id + "&status=" + status);
+                        request.send(null);
+                        location.reload();
+                    }
+                })
+            }
+            function change_baned(id, status) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Change it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var request = new XMLHttpRequest();
+                        request.open("GET", "/change-baned?id=" + id + "&status=" + status);
+                        request.send(null);
+                        location.reload();
+                    }
+                })
+            }
+            function delete_user(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var request = new XMLHttpRequest();
+                        request.open("GET", "/delete-user?id=" + id);
+                        request.send(null);
+                        location.reload();
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="#">Coinex API</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active text-light" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/account">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/deposit">Deposit</a>
+                        </li>
+                        {% if admin %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/user">User</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link text-dark btn btn-warning" aria-current="page" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+            
+        <div class="container-fluid mt-5 text-black">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-white mt-2">
+                        <div class="card-header"><b>Add User</b></div>
+                        <div class="card-body">
+                            <form method="post" action="/user">
+                                <div class="mb-3 mt-3">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">Password</label>
+                                    <input type="password" class="form-control" id="pass" name="pass">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">Status</label>
+                                    <select class="form-control" name="status" id="status">
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">Baned</label>
+                                    <select class="form-control" name="baned" id="baned">
+                                        <option value="1">Banned</option>
+                                        <option value="0">Not Banned</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <input type="submit" class="btn btn-primary" id="submit" name="submit">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-white mt-2">
+                        <div class="card-header"><b>Users Information</b></div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Status</th>
+                                            <th>Banned</th>
+                                            <th>Expired</th>
+                                            <th>Change Banned</th>
+                                            <th>Change Status</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <td>{{ user[1] }}</td>
+                                            <td>{{ user[2] }}</td>
+                                            <td>{{ user[3] }}</td>
+                                            {% if user[5] == '0' %}
+                                                <td>Not Banned</td>
+                                            {% else %}
+                                                <td>Banned</td>
+                                            {% endif %}
+                                            <td>{{ user[4] }}</td>
+                                            <td><button class="btn btn-warning" onclick="change_baned({{ user[0] }}, '{{ user[5] }}')">Change</button></td>
+                                            <td><button class="btn btn-warning" onclick="change({{ user[0] }}, '{{ user[3] }}')">Change</button></td>
+                                            <td><button class="btn btn-danger" onclick="delete_user({{ user[0] }})">Delete</button></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>          
+    </body>
+    <div class="card text-white mt-2">
+    </div>
+    <footer class="container-fluid text-white text-center mt-auto">
+        <p><p>Developed with <span class="text-danger">&#10084;</span> by <a class="btn btn-warning" href="https://github.com/qasem-talaee" target="_blank">Qasem Talaee</a> (<script>const d = new Date();let year = d.getFullYear(); document.write("2021 - " + year);</script>)</p></p>
+    </footer> 
+</html>

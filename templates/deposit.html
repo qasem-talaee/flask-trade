@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Coinex API</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/static/css/mystyle.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/js/alert.js"></script>
+        <script>
+            function change(id, status) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Change it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var request = new XMLHttpRequest();
+                        request.open("GET", "/change-status?id=" + id + "&status=" + status);
+                        request.send(null);
+                        location.reload();
+                    }
+                })
+            }
+            async function get_add() {
+                var xmlHttp = new XMLHttpRequest();
+                let market = document.getElementById("market").value;
+                let chain = document.getElementById("chain").value;
+                xmlHttp.open("GET", "/get-deposit?market=" + market + "&chain=" + chain, true);
+                xmlHttp.onload = function (e) {
+                    if (xmlHttp.readyState === 4) {
+                        if (xmlHttp.status === 200) {
+                            let result = JSON.parse(xmlHttp.responseText).data.coin_address;
+                            document.getElementById("address_print").innerHTML = result;
+                        }else{
+                            document.getElementById("address_print").innerHTML = 'Something went wrong.Please try again.';
+                        }
+                    }
+                }
+                xmlHttp.send(null);
+            }
+
+            async function submit_with(){
+                var xmlHttp = new XMLHttpRequest();
+                let market = document.getElementById("market_w").value;
+                let chain = document.getElementById("chain_w").value;
+                let target = document.getElementById("target").value;
+                let amount = document.getElementById("amount").value;
+                if(document.getElementById("target").value.length == 0 || document.getElementById("amount").value.length == 0){
+                    document.getElementById("target_print").innerHTML = 'Please enter information.';
+                }else{
+                    xmlHttp.open("GET", "/set-withdraw?market=" + market + "&chain=" + chain + "&target=" + target + "&amount=" + amount, true);
+                    xmlHttp.onload = function (e) {
+                        if (xmlHttp.readyState === 4) {
+                            if (xmlHttp.status === 200) {
+                                let result = JSON.parse(xmlHttp.responseText).message;
+                                document.getElementById("target_print").innerHTML = result;
+                            }else{
+                                document.getElementById("address_print").innerHTML = 'Something went wrong.Please try again.';
+                            }
+                        }
+                    }
+                    xmlHttp.send(null);
+                }
+            }
+            async function submit_t() {
+                var xmlHttp = new XMLHttpRequest();
+                let status = document.getElementById("status_t").value;
+                let market = document.getElementById("market_t").value;
+                if(document.getElementById("amount_t").value.length != 0){
+                    let amount = document.getElementById("amount_t").value;
+                    xmlHttp.open("GET", "/trasnfer?market=" + market + "&status=" + status + "&amount=" + amount, true);
+                    xmlHttp.onload = function (e) {
+                    if (xmlHttp.readyState === 4) {
+                        asset();
+                        }
+                    }
+                    xmlHttp.send(null);
+                }
+                
+            }
+
+            async function asset(){
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("GET", "/getall_asset", true);
+                xmlHttp.onload = function (e) {
+                    if (xmlHttp.readyState === 4) {
+                        if (xmlHttp.status === 200) {
+                            let asset = JSON.parse(xmlHttp.responseText).asset_s.data;
+                            out = ''
+                            for (var key in asset){
+                                let avail = asset[key]['available']
+                                if (avail == 0){
+                                    avail = 0;
+                                }
+                                let frozen = asset[key]['frozen']
+                                if (frozen == 0){
+                                    frozen = 0;
+                                }
+                                out += "<tr><td>" + key + "</td><td>" + avail + "</td><td>" + frozen + "</td></tr>"
+                            }
+                            document.getElementById("asset_s").innerHTML = out
+
+                            asset = JSON.parse(xmlHttp.responseText).asset_f.data;
+                            out = ''
+                            for (var key in asset){
+                                let avail = asset[key]['available']
+                                if (avail == 0){
+                                    avail = 0;
+                                }
+                                let frozen = asset[key]['frozen']
+                                if (frozen == 0){
+                                    frozen = 0;
+                                }
+                                out += "<tr><td>" + key + "</td><td>" + avail + "</td><td>" + frozen + "</td></tr>"
+                            }
+                            document.getElementById("asset_f").innerHTML = out
+                        }
+                    }
+                }
+                xmlHttp.send(null);
+            }
+        </script>
+    </head>
+    <body class="d-flex flex-column min-vh-100" onload="asset()">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="#">Coinex API</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active text-light" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/account">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/deposit">Deposit</a>
+                        </li>
+                        {% if admin %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/user">User</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link text-dark btn btn-warning" aria-current="page" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+            
+        <div class="container-fluid mt-5 text-black">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-white mt-2">
+                        <div class="card-header"><b>Get Deposit Address</b></div>
+                        <div class="card-body">
+                            <div class="mb-3 mt-3">
+                                <label for="market" class="form-label">Market:</label>
+                                <select class="form-select" name="market" id="market">
+                                    <option value="USDT">USDT</option>
+                                    <option value="BTC">BTC</option>
+                                    <option value="BCH">BCH</option>
+                                    <option value="USDH">USDH</option>
+                                    <option value="CET">CET</option>
+                                </select> 
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="chain" class="form-label">Chain:</label>
+                                <select class="form-select" name="chain" id="chain">
+                                    <option value="ERC20">ERC20</option>
+                                    <option value="TRC20">TRC20</option>
+                                    <option value="Omni">Omni</option>
+                                    <option value="CoinExChain">CoinExChain</option>
+                                </select> 
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <button class="btn btn-primary" id="get_add" name="get_add" onclick="get_add()">Get Address</button>
+                            </div>
+                            <h3 class="bg-info text-dark text-center" id="address_print"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-white mt-2">
+                        <div class="card-header"><b>Submit Withdrawal Order</b></div>
+                        <div class="card-body">
+                            <div class="mb-3 mt-3">
+                                <label for="market" class="form-label">Market:</label>
+                                <select class="form-select" name="market" id="market_w">
+                                    <option value="USDT">USDT</option>
+                                    <option value="BTC">BTC</option>
+                                    <option value="BCH">BCH</option>
+                                    <option value="USDH">USDH</option>
+                                    <option value="CET">CET</option>
+                                </select> 
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="chain" class="form-label">Chain:</label>
+                                <select class="form-select" name="chain" id="chain_w">
+                                    <option value="ERC20">ERC20</option>
+                                    <option value="TRC20">TRC20</option>
+                                    <option value="Omni">Omni</option>
+                                    <option value="CoinExChain">CoinExChain</option>
+                                </select> 
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="target" class="form-label">Target wallet address:</label>
+                                <input class="form-control" type="text" name="target" id="target" />
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="amount" class="form-label">Amount:</label>
+                                <input class="form-control" type="text" name="amount" id="amount" />
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <button class="btn btn-primary" id="get_add_w" name="get_add" onclick="submit_with()">Submit</button>
+                            </div>
+                            <h3 class="bg-info text-dark text-center" id="target_print"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="card text-white mt-2">
+                        <div class="card-header"><b>Transfer Between Spot and Futures</b></div>
+                        <div class="card-body">
+                            <div class="mb-3 mt-3">
+                                <label for="market" class="form-label">Status:</label>
+                                <select class="form-select" name="market" id="status_t">
+                                    <option value="in">From Spot to Perpetual Account</option>
+                                    <option value="BTC">From Perpetual to Spot Account</option>
+                                </select> 
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="market" class="form-label">Market:</label>
+                                <select class="form-select" name="market" id="market_t">
+                                    <option value="USDT">USDT</option>
+                                    <option value="BTC">BTC</option>
+                                </select> 
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="amount" class="form-label">Amount:</label>
+                                <input class="form-control" type="text" name="amount" id="amount_t" />
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <button class="btn btn-primary" id="get_add_t" name="get_add" onclick="submit_t()">Submit</button>
+                            </div>
+                            <h3 class="bg-info text-dark text-center" id="target_print"></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>Your Asset is Spot</b></div>
+                                <div class="card-body" id="">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped text-white">
+                                            <thead>
+                                                <tr>
+                                                    <th>Coin</th>
+                                                    <th>Available</th>
+                                                    <th>Frozen</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="asset_s">
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>Your Asset in Futures</b></div>
+                            <div class="card-body" id="">
+                                <div class="card-body" id="">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped text-white">
+                                            <thead>
+                                                <tr>
+                                                    <th>Coin</th>
+                                                    <th>Available</th>
+                                                    <th>Frozen</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="asset_f">
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>          
+    </body>
+    <div class="card text-white mt-2">
+    </div>
+    <footer class="container-fluid text-white text-center mt-auto">
+        <p><p>Developed with <span class="text-danger">&#10084;</span> by <a class="btn btn-warning" href="https://github.com/qasem-talaee" target="_blank">Qasem Talaee</a> (<script>const d = new Date();let year = d.getFullYear(); document.write("2021 - " + year);</script>)</p></p>
+    </footer> 
+</html>

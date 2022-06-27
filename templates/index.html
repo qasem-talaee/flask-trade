@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Coinex API</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/static/css/mystyle.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/js/myfunc.js"></script>
+        <script src="/static/js/alert.js"></script>
+        <script src="/static/js/jquery.js"></script>
+        <script>
+            function show_order(id, market) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Cancel it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        cancel_order(id, market);
+                    }
+                })
+            }
+            function open_pos() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Open Position!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        open_pos_api()
+                    }
+                })
+            }
+
+            function closepos() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Close Position!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        close_pos_api()
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="#">Coinex API</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active text-light" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/account">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/deposit">Deposit</a>
+                        </li>
+                        {% if admin %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/user">User</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link text-dark btn btn-warning" aria-current="page" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+            
+        <div class="container-fluid mt-5 text-black">
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="row px-2">
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>Position</b></div>
+                            <div class="card-body">
+                                <div class="mb-3 mt-3">
+                                    <label for="market" class="form-label">Market:</label>
+                                    <select class="form-select" name="market" id="market">
+                                        {% for i in market_to %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                        {% endfor %}
+                                    </select> 
+                                </div>
+                                <p>Position :</p>
+                                <div class="btn-group col-12">
+                                    <label class="gift_amount">
+                                        <input type="radio" name="amount" id="type_long" />
+                                        <span class="btn btn-secondary">Long</span>
+                                    </label>
+                                    <label class="gift_amount">
+                                        <input type="radio" name="amount" id="type_short" />
+                                        <span class="btn btn-secondary">Short</span>
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3 mt-3">
+                                            <label for="leverage_p" class="form-label">Leverage Type:</label>
+                                            <select class="form-select" name="leverage_p" id="leverage_pt">
+                                                <option value="1">Isolated Margin</option>
+                                                <option value="2">Cross Margin</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3 mt-3">
+                                            <label for="leverage_p" class="form-label">Leverage:</label>
+                                            <select class="form-select" name="leverage_p" id="leverage_p" onchange="print_can()">
+                                                <option value="1">1</option>
+                                                <option value="3">3</option>
+                                                <option value="5">5</option>
+                                                <option value="8">8</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="order_type" class="form-label">Order Type:</label>
+                                    <select class="form-select" name="order_type" id="order_type" onchange="change_order_type()">
+                                        <option value="limit">Limit Order</option>
+                                        <option value="market">Market Order</option>
+                                    </select> 
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <div class="mb-3 mt-3">
+                                        <label for="ch_d">Amount</label>
+                                        <input type="text" class="form-control" id="amount" name="amount" onchange="print_can()">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="ch_d">Price</label>
+                                        <input type="text" class="form-control" id="price" name="price" onchange="print_can()">
+                                    </div>
+                                    <p class="bg-info text-dark text-center" id="print_can_p"></p>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <button class="btn btn-block btn-primary" onclick="open_pos()">Open Position</button>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3 mt-3 form-inline">
+                                            <label for="ch_d">Stop Type in TP</label>
+                                            <select class="form-select" name="" id="tp_t">
+                                                <option value="1">Transaction price</option>
+                                                <option value="3">Mark price</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3 mt-3 form-inline">
+                                            <label for="ch_d">Take Profit</label>
+                                            <input type="text" class="form-control" id="tp" name="tp">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3 mt-3 form-inline">
+                                            <label for="ch_d">Stop Type in SL</label>
+                                            <select class="form-select" name="" id="sl_t">
+                                                <option value="1">Transaction price</option>
+                                                <option value="3">Mark price</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3 mt-3">
+                                            <label for="ch_d">Stop Loss</label>
+                                            <input type="text" class="form-control" id="sl" name="sl">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="settpsl()">Confirm</button>
+                                
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-danger text-dark form-control" onclick="closepos()">Close All Postions</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="row px-2">
+
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>Opened Position Status</b></div>
+                            <div class="card-body" style="font-size: 1.1rem;">
+                                <div class="row hove-status">
+                                    <div class="col">
+                                        <p>Coin Price Now</p>
+                                    </div>
+                                    <div class="col d-flex flex-row-reverse">
+                                        <p id="price_now">0</p>
+                                    </div>
+                                </div><hr/>
+                                <div id="pos_status">
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>Pending Orders</b></div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped text-white">
+                                        <thead>
+                                            <tr>
+                                                <th>Market</th>
+                                                <th>Side</th>
+                                                <th>Price</th>
+                                                <th>Leverage</th>
+                                                <th>Amount</th>
+                                                <th>Cancel</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pending_table">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div> 
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="row px-2">
+
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>List of Assets</b></div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped text-white">
+                                        <thead>
+                                            <tr>
+                                                <th>Coin</th>
+                                                <th>Available</th>
+                                                <th>Frozen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="asset_table">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div> 
+                            </div>
+                        </div>
+
+                        <div class="card text-white mt-2">
+                            <div class="card-header"><b>Financial Management</b></div>
+                            <div class="card-body">
+                                <div class="mb-3 mt-3">
+                                    <label for="fund">Fund</label>
+                                    <input type="text" class="form-control" id="fund" name="fund">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="my_d">Percent of personal loss</label>
+                                    <input type="text" class="form-control" id="my_d" name="my_d">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="ch_d">Percent of loss on the chart</label>
+                                    <input type="text" class="form-control" id="ch_d" name="ch_d">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="leverage" class="form-label">Leverage:</label>
+                                    <select class="form-select" name="leverage" id="leverage">
+                                        <option value="1">1</option>
+                                        <option value="5">5</option>
+                                        <option value="8">8</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <button class="btn btn-primary" onclick="fm_cal()">Calculate</button>
+                                </div>
+                                <p id="fm_result" class="px-1 rounded text-dark"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>          
+    </body>
+    <div class="card text-white mt-2">
+    </div>
+    <footer class="container-fluid text-white text-center mt-auto">
+        <p><p>Developed with <span class="text-danger">&#10084;</span> by <a class="btn btn-warning" href="https://github.com/qasem-talaee" target="_blank">Qasem Talaee</a> (<script>const d = new Date();let year = d.getFullYear(); document.write("2021 - " + year);</script>)</p></p>
+    </footer> 
+</html>

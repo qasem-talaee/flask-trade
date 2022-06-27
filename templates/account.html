@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Coinex API</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/static/css/mystyle.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <script src="/static/js/myfunc.js"></script>
+        <script src="/static/js/alert.js"></script>
+        <script>
+            function show_order(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Cancel it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        cancel_order(id);
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="#">Coinex API</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active text-light" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/account">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/deposit">Deposit</a>
+                        </li>
+                        {% if admin %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="/user">User</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link text-dark btn btn-warning" aria-current="page" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+            
+        <div class="container-fluid mt-5 text-black">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-white mt-2">
+                        <div class="card-header"><b>Acoount Information</b></div>
+                        <div class="card-body">
+                            <form method="post" action="/account">
+                                <div class="mb-3 mt-3">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ data.name }}">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ data.email }}">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">access_id</label>
+                                    <input type="text" class="form-control" id="access_id" name="access_id" value="{{ data.access_id }}">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">secret_key</label>
+                                    <input type="text" class="form-control" id="secret_key" name="secret_key" value="{{ data.secret_key }}">
+                                </div>
+                                <p class="bg-warning text-dark">If you don't want to change your password, Please left these inputs empty.</p>
+                                <div class="mb-3 mt-3">
+                                    <label for="">Old Password</label>
+                                    <input type="password" class="form-control" id="old_pass" name="old_pass">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">New Password</label>
+                                    <input type="password" class="form-control" id="new_pass" name="new_pass">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="">New Password Again</label>
+                                    <input type="password" class="form-control" id="new_pass_again" name="new_pass_again">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <input type="submit" class="btn btn-primary" id="submit" name="submit">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>          
+    </body>
+    <div class="card text-white mt-2">
+    </div>
+    <footer class="container-fluid text-white text-center mt-auto">
+        <p><p>Developed with <span class="text-danger">&#10084;</span> by <a class="btn btn-warning" href="https://github.com/qasem-talaee" target="_blank">Qasem Talaee</a> (<script>const d = new Date();let year = d.getFullYear(); document.write("2021 - " + year);</script>)</p></p>
+    </footer> 
+</html>
