@@ -24,7 +24,7 @@ def get_admin():
 
 @socketio.on('disconnect')
 def disconnect_user():
-    session.pop('email', None)
+    session.clear()
 
 @app.route('/')
 def home():
@@ -60,8 +60,6 @@ def login():
 
 @app.route('/logout')
 def logout():
-    #session['email'] = None
-    #session.pop('email', None)
     session.clear()
     return redirect('/')
 
@@ -232,6 +230,7 @@ def open_pos():
         else:
             pos = 2
         price_now = Api.kline(market=market, limit=1, kline_type='1min')['data'][0][2]
+        time.sleep(1)
         amount = get_amount(amount, market, price_now, leverage)
         Api.adjust_leverage(market, leverage_t, str(leverage))
         if type == 'limit':
