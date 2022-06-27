@@ -230,8 +230,8 @@ def open_pos():
             pos = 1
         else:
             pos = 2
-        price = Api.kline(market=market, limit=1, kline_type='1min')['data'][0][2]
-        amount = get_amount(amount, market, price, leverage)
+        price_now = Api.kline(market=market, limit=1, kline_type='1min')['data'][0][2]
+        amount = get_amount(amount, market, price_now, leverage)
         Api.adjust_leverage(market, leverage_t, str(leverage))
         if type == 'limit':
             Api.put_limit_order(market, pos, str(amount), str(price))
@@ -375,8 +375,8 @@ def transfer():
         return out
     return ('', 200)
     
-@app.route('/settpsl', methods=['GET'])
-def settpsl():
+@app.route('/setstpsl', methods=['GET'])
+def setstpsl():
     if not session.get('email'):
         return redirect('/login')
     else:
