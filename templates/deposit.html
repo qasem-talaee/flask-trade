@@ -12,23 +12,10 @@
         <script src="/static/js/bootstrap.bundle.min.js"></script>
         <script src="/static/js/alert.js"></script>
         <script>
-            function change(id, status) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, Change it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var request = new XMLHttpRequest();
-                        request.open("GET", "/change-status?id=" + id + "&status=" + status);
-                        request.send(null);
-                        location.reload();
-                    }
-                })
+            function show_message(text){
+                Swal.fire(text);
             }
+            
             async function get_add() {
                 var xmlHttp = new XMLHttpRequest();
                 let market = document.getElementById("market").value;
@@ -39,8 +26,10 @@
                         if (xmlHttp.status === 200) {
                             let result = JSON.parse(xmlHttp.responseText).data.coin_address;
                             document.getElementById("address_print").innerHTML = result;
+                            show_message(JSON.parse(xmlHttp.responseText).message);
                         }else{
                             document.getElementById("address_print").innerHTML = 'Something went wrong.Please try again.';
+                            show_message(JSON.parse(xmlHttp.responseText).message);
                         }
                     }
                 }
@@ -62,8 +51,10 @@
                             if (xmlHttp.status === 200) {
                                 let result = JSON.parse(xmlHttp.responseText).message;
                                 document.getElementById("target_print").innerHTML = result;
+                                show_message(JSON.parse(xmlHttp.responseText).message);
                             }else{
                                 document.getElementById("address_print").innerHTML = 'Something went wrong.Please try again.';
+                                show_message(JSON.parse(xmlHttp.responseText).message);
                             }
                         }
                     }
@@ -79,6 +70,7 @@
                     xmlHttp.open("GET", "/transfer?market=" + market + "&status=" + status + "&amount=" + amount, true);
                     xmlHttp.onload = function (e) {
                     if (xmlHttp.readyState === 4) {
+                        show_message(JSON.parse(xmlHttp.responseText).message);
                         asset();
                         }
                     }

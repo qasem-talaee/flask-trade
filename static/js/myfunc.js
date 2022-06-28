@@ -1,3 +1,7 @@
+function show_message(text){
+    Swal.fire(text);
+}
+
 //Financial Management
 function fm_cal () {
     if(document.getElementById("fund").value.length == 0 || document.getElementById("my_d").value.length == 0 || document.getElementById("ch_d").value.length == 0){
@@ -23,6 +27,7 @@ function cancel_order (id, market) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/cancel-order?id=" + id + "&market=" + market, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
+    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
 }
 
@@ -62,6 +67,7 @@ function open_pos_api(){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/open-pos?type=" + order_type + "&market=" + market + "&leverage=" + leverage + "&amount=" + amount + "&price=" + price + "&pos=" + pos + "&leverage_t=" + leverage_t, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
+    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
 }
 
@@ -70,6 +76,7 @@ function close_pos_api(){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/closepos?" + "market=" + market, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
+    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
 }
 
@@ -82,6 +89,7 @@ function settpsl(){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/setstpsl?market=" + market + "&tp=" + tp + "&sl=" + sl + "&sl_t=" + sl_t + "&tp_t=" + tp_t, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
+    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
 }
 

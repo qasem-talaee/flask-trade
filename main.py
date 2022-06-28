@@ -234,9 +234,11 @@ def open_pos():
         amount = get_amount(amount, market, price_now, leverage)
         Api.adjust_leverage(market, leverage_t, str(leverage))
         if type == 'limit':
-            Api.put_limit_order(market, pos, str(amount), str(price))
+            out = Api.put_limit_order(market, pos, str(amount), str(price))
+            return out
         if type == 'market':
-            Api.put_market_order(market, pos, str(amount))
+            out = Api.put_market_order(market, pos, str(amount))
+            return out
     return ('', 200)
     
 @app.route('/get-asset', methods=['GET'])
@@ -393,11 +395,13 @@ def setstpsl():
             id = out[0]['position_id']
             if sl != '':
                 if tp == '':
-                    Api.setsl(market, id, sl_t, sl)
+                    out = Api.setsl(market, id, sl_t, sl)
+                    return out
                 else:
-                    Api.setsl(market, id, sl_t, sl)
+                    out = Api.setsl(market, id, sl_t, sl)
                     time.sleep(1)
                     Api.settp(market, id, tp_t, tp)
+                    return out
     return ('', 200)
     
 @app.route('/closepos', methods=['GET'])
@@ -412,7 +416,8 @@ def closepos():
         out = Api.query_position_pending(market)['data']
         if len(out) != 0:
             id = out[0]['position_id']
-            Api.close_pos(market, id)
+            out = Api.close_pos(market, id)
+            return out
     return ('', 200)
     
 if __name__ == '__main__':
