@@ -89,8 +89,8 @@ function settpsl(){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/setstpsl?market=" + market + "&tp=" + tp + "&sl=" + sl + "&sl_t=" + sl_t + "&tp_t=" + tp_t, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
-    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
+    show_message(JSON.parse(xmlHttp.responseText).message);
 }
 
 setInterval(
