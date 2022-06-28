@@ -27,8 +27,8 @@ function cancel_order (id, market) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/cancel-order?id=" + id + "&market=" + market, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
-    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
+    show_message(JSON.parse(xmlHttp.responseText).message);
 }
 
 function change_order_type(){
@@ -67,8 +67,8 @@ function open_pos_api(){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/open-pos?type=" + order_type + "&market=" + market + "&leverage=" + leverage + "&amount=" + amount + "&price=" + price + "&pos=" + pos + "&leverage_t=" + leverage_t, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
-    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
+    show_message(JSON.parse(xmlHttp.responseText).message);
 }
 
 function close_pos_api(){
@@ -76,8 +76,8 @@ function close_pos_api(){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "/closepos?" + "market=" + market, false ); // false for synchronous request
     //let result = JSON.parse(xmlHttp.responseText).data[0][2];
-    show_message(JSON.parse(xmlHttp.responseText).message);
     xmlHttp.send( null );
+    show_message(JSON.parse(xmlHttp.responseText).message);
 }
 
 function settpsl(){
