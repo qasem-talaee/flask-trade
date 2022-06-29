@@ -24,7 +24,7 @@ def get_admin():
 
 @socketio.on('disconnect')
 def disconnect_user():
-    session.clear()
+    session['email'] = None
 
 @app.route('/')
 def home():
@@ -60,7 +60,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.clear()
+    session['email'] = None
     return redirect('/')
 
 @app.route('/ban')
