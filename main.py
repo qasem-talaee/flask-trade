@@ -24,6 +24,7 @@ def get_admin():
 
 @socketio.on('disconnect')
 def disconnect_user():
+    session.clear()
     session['email'] = None
 
 @app.route('/')
@@ -36,11 +37,11 @@ def home():
     secret = get_secert()
     global Api
     Api = api.CoinexPerpetualApi(secret[0], secret[1])
-    markets = Api.get_market_info()['data']
+    #markets = Api.get_market_info()['data']
     market_to = []
-    for market in markets:
-        if 'USDT' in market['name']:
-            market_to.append(market['name'])
+    #for market in markets:
+        #if 'USDT' in market['name']:
+            #market_to.append(market['name'])
     return render_template('index.html', admin=get_admin(), market_to=market_to)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -60,6 +61,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+    session.clear()
     session['email'] = None
     return redirect('/')
 
