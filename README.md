@@ -15,13 +15,13 @@ Password: admin
 
 ## Installation
 ```bash
-sudo apt install python-venv python3-pip
+sudo apt install python3-venv python3-pip
 ```
 ```bash
 python3 -m venv ./venv
 ```
 ```bash
-source ./venv/bin/active
+source ./venv/bin/activate
 ```
 ```bash
 pip install -r req.txt
